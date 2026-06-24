@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Woldesenbe Gemeso — Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #080b12;
+      --surface: #0e1320;
+      --card: #131929;
+      --border: #1e2d45;
+      --accent: #00d4ff;
+      --accent2: #7c6af7;
+      --green: #00ff94;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 60px;
+      background: rgba(8, 11, 18, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 15px;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+
+    .nav-logo span { color: var(--green); }
+
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 60px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -100px; left: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(124,106,247,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-content { max-width: 640px; z-index: 1; }
+
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--green);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-tag::before {
+      content: '';
+      display: inline-block;
+      width: 24px; height: 1px;
+      background: var(--green);
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 5vw, 58px);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 10px;
+      letter-spacing: -1px;
+    }
+
+    .hero h1 .name {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-role {
+      font-family: var(--mono);
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .hero-role .cursor {
+      display: inline-block;
+      width: 2px; height: 18px;
+      background: var(--accent);
+      margin-left: 4px;
+      vertical-align: middle;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 16px;
+      max-width: 480px;
+      margin-bottom: 36px;
+      line-height: 1.8;
+    }
+
+    .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    .btn-primary {
+      padding: 13px 28px;
+      background: var(--accent);
+      color: #080b12;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .btn-primary:hover { opacity: 0.85; transform: translateY(-2px); }
+
+    .btn-outline {
+      padding: 13px 28px;
+      background: transparent;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+    /* PHOTO placeholder */
+    .hero-photo {
+      position: absolute;
+      right: 100px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--card);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .hero-photo::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      z-index: -1;
+    }
+
+    .photo-inner {
+      width: 276px; height: 276px;
+      border-radius: 50%;
+      background: var(--card);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .photo-icon { font-size: 64px; }
+    .photo-label { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+    /* SECTIONS */
+    section { padding: 100px 60px; }
+
+    .section-tag {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 48px;
+      letter-spacing: -0.5px;
+    }
+
+    .section-title span { color: var(--accent); }
+
+    /* ABOUT */
+    #about { background: var(--surface); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    .about-text p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.9;
+      margin-bottom: 16px;
+    }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--accent);
+      font-family: var(--mono);
+    }
+
+    .stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+    /* SKILLS */
+    #skills { background: var(--bg); }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .skill-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .skill-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+
+    .skill-icon { font-size: 28px; margin-bottom: 14px; }
+
+    .skill-name {
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .skill-bar-bg {
+      height: 4px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .skill-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 4px;
+    }
+
+    .skill-level { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+    /* PROJECTS */
+    #projects { background: var(--surface); }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .project-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .project-card:hover::before { opacity: 1; }
+
+    .project-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      background: rgba(0,212,255,0.08);
+      padding: 4px 10px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 14px;
+    }
+
+    .project-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+
+    .project-desc { color: var(--muted); font-size: 14px; line-height: 1.7; margin-bottom: 20px; }
+
+    .project-tech { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+
+    .tech-pill {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .project-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: gap 0.2s;
+    }
+
+    .project-link:hover { gap: 10px; }
+
+    /* CONTACT */
+    #contact { background: var(--bg); }
+
+    .contact-inner {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .contact-inner p { color: var(--muted); font-size: 16px; margin-bottom: 40px; line-height: 1.8; }
+
+    .contact-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 24px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .contact-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 30px;
+      border-top: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    footer span { color: var(--accent); }
+
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .hero { padding: 120px 24px 80px; }
+      .hero-photo { display: none; }
+      section { padding: 80px 24px; }
+      .about-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo"><span>&lt;</span>WG<span>/&gt;</span></div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <div class="hero-tag">Available for opportunities</div>
+      <h1>Hi, I'm <br><span class="name">Woldesenbe Gemeso</span></h1>
+      <p class="hero-role">Software Engineer in Progress<span class="cursor"></span></p>
+      <p>I build clean, functional software and grow my skills every single day. Focused on Python, JavaScript, and data — with a passion for solving real problems with code.</p>
+      <div class="hero-buttons">
+        <a href="#projects" class="btn-primary">View My Work</a>
+        <a href="#contact" class="btn-outline">Get In Touch</a>
+      </div>
+    </div>
+    <div class="hero-photo">
+      <div class="photo-inner">
+        <div class="photo-icon">👤</div>
+        <div class="photo-label">// add your photo here</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-tag">// about_me</div>
+    <h2 class="section-title">Who I <span>Am</span></h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>I'm Woldesenbe Gemeso, a self-taught developer on a focused journey to become a professional software engineer. I believe in learning by building — every concept I learn goes straight into a real project.</p>
+        <p>Currently mastering Python and JavaScript, with a strong interest in data analysis and AI-powered applications. I use modern tools including AI as a development partner to build projects that go beyond my current level.</p>
+        <p>Based in Ethiopia, building for the world.</p>
+      </div>
+      <div class="about-stats">
+        <div class="stat-card">
+          <div class="stat-number">2+</div>
+          <div class="stat-label">Projects Built</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">Daily</div>
+          <div class="stat-label">GitHub Commits</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">Python</div>
+          <div class="stat-label">Primary Language</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">SQL</div>
+          <div class="stat-label">Next Focus</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="section-tag">// skills</div>
+    <h2 class="section-title">What I <span>Know</span></h2>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-icon">🐍</div>
+        <div class="skill-name">Python</div>
+        <div style="color:var(--muted);font-size:13px;">Variables, Functions, Loops, If/Else</div>
+        <div class="skill-bar-bg"><div class="skill-bar" style="width:55%"></div></div>
+        <div class="skill-level">Intermediate — actively learning</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🌐</div>
+        <div class="skill-name">JavaScript</div>
+        <div style="color:var(--muted);font-size:13px;">Web fundamentals, DOM, logic</div>
+        <div class="skill-bar-bg"><div class="skill-bar" style="width:30%"></div></div>
+        <div class="skill-level">Beginner — in progress</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🗄️</div>
+        <div class="skill-name">SQL</div>
+        <div style="color:var(--muted);font-size:13px;">Data querying & analysis</div>
+        <div class="skill-bar-bg"><div class="skill-bar" style="width:20%"></div></div>
+        <div class="skill-level">Learning next</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🔧</div>
+        <div class="skill-name">Git & GitHub</div>
+        <div style="color:var(--muted);font-size:13px;">Version control, daily commits</div>
+        <div class="skill-bar-bg"><div class="skill-bar" style="width:60%"></div></div>
+        <div class="skill-level">Comfortable — daily use</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🤖</div>
+        <div class="skill-name">AI-Assisted Development</div>
+        <div style="color:var(--muted);font-size:13px;">Claude API, GitHub Copilot</div>
+        <div class="skill-bar-bg"><div class="skill-bar" style="width:65%"></div></div>
+        <div class="skill-level">Strong — modern dev approach</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">💻</div>
+        <div class="skill-name">VS Code</div>
+        <div style="color:var(--muted);font-size:13px;">Primary development environment</div>
+        <div class="skill-bar-bg"><div class="skill-bar" style="width:70%"></div></div>
+        <div class="skill-level">Comfortable — daily use</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-tag">// projects</div>
+    <h2 class="section-title">What I've <span>Built</span></h2>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div class="project-tag">Python · Quiz App</div>
+        <div class="project-title">Python Knowledge Quiz</div>
+        <p class="project-desc">An interactive multiple-choice quiz game testing Python fundamentals. Features score tracking, instant feedback, progress bar, and a results screen.</p>
+        <div class="project-tech">
+          <span class="tech-pill">Python</span>
+          <span class="tech-pill">React</span>
+          <span class="tech-pill">JavaScript</span>
+        </div>
+        <a href="https://github.com/sintageme" class="project-link">View on GitHub →</a>
+      </div>
+      <div class="project-card">
+        <div class="project-tag">Coming Soon</div>
+        <div class="project-title">Project #2</div>
+        <p class="project-desc">Currently in development. Check back soon or follow my GitHub to see what I'm building next.</p>
+        <div class="project-tech">
+          <span class="tech-pill">Python</span>
+          <span class="tech-pill">JavaScript</span>
+        </div>
+        <a href="https://github.com/sintageme" class="project-link">Follow on GitHub →</a>
+      </div>
+      <div class="project-card">
+        <div class="project-tag">Coming Soon</div>
+        <div class="project-title">Project #3</div>
+        <p class="project-desc">SQL data dashboard coming soon. Following my data analysis learning path.</p>
+        <div class="project-tech">
+          <span class="tech-pill">Python</span>
+          <span class="tech-pill">SQL</span>
+        </div>
+        <a href="https://github.com/sintageme" class="project-link">Follow on GitHub →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-tag">// contact</div>
+    <h2 class="section-title">Let's <span>Connect</span></h2>
+    <div class="contact-inner">
+      <p>I'm always open to new opportunities, collaborations, or just a good conversation about code. Feel free to reach out.</p>
+      <div class="contact-links">
+        <a href="https://github.com/sintageme" class="contact-link">
+          <span>⚡</span> GitHub
+        </a>
+        <a href="mailto:your@email.com" class="contact-link">
+          <span>✉️</span> Email
+        </a>
+        <a href="#" class="contact-link">
+          <span>💼</span> LinkedIn
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>&lt;</span> Built by Woldesenbe Gemeso <span>/&gt;</span> · 2024 · Always learning, always building
+  </footer>
+
+</body>
+</html>
